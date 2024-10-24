@@ -1,0 +1,177 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.ecodex.midd</groupId>
+  <artifactId>middleware</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+    <parent>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-parent</artifactId>
+	    <version>2.7.13</version> <!-- Versión compatible con Java 8 -->
+	    <relativePath/> <!-- lookup parent from repository -->
+	</parent>
+  
+    <properties>
+    <java.version>17</java.version> <!-- O la versión de Java que estés usando -->
+  </properties>
+  
+  <dependencies>
+	
+	<!-- Spring Boot Starter -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+         <exclusions>
+	        <exclusion>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-logging</artifactId>
+	        </exclusion>
+	    </exclusions>
+    </dependency>
+    
+    <!-- Apache CXF Dependencies -->
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>3.5.0</version> 
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-transports-http</artifactId>
+        <version>3.5.0</version>
+    </dependency>
+
+    <!-- Apache CXF Starter para Java EE (javax) -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+      <version>3.4.5</version>  
+    </dependency>
+    
+        <!-- Dependencia para JAXB (serialización de objetos) -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    
+<!--    logs-->
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-core</artifactId>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-slf4j-impl</artifactId>
+	</dependency>
+	
+<!--	quartz-->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-quartz</artifactId>
+	</dependency>
+
+
+<!--	dependencias jar-->
+	<dependency>
+		<groupId>eu.domibus.connector</groupId>
+		<artifactId>domibusConnectorAPI</artifactId>
+		<version>4.4.8</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>eu.ecodex.utils</groupId>
+		<artifactId>spring-property-configuration-validator</artifactId>
+		<version>0.0.22-RELEASE</version>
+	</dependency>
+    
+</dependencies>
+
+
+<build>
+    <plugins>
+
+      <!-- Plugin para la compilación -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      
+<!--      plugin para generar las clases del wsdl-->
+<!--      <plugin>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-codegen-plugin</artifactId>-->
+<!--            <version>3.5.0</version>-->
+<!--            <executions>-->
+<!--                <execution>-->
+<!--                    <id>generate-sources</id>-->
+<!--                    <phase>generate-sources</phase>-->
+<!--                    <configuration>-->
+<!--                        <wsdlOptions>-->
+<!--                            <wsdlOption>-->
+<!--                                <wsdl>http://localhost:8080/services/job01?wsdl</wsdl>-->
+<!--                                <extraargs>-->
+<!--                                    <extraarg>-p</extraarg>-->
+<!--                                    <extraarg>com.ecodex.client.wsdlautogen</extraarg>  Nombre del paquete -->
+<!--                                </extraargs>-->
+<!--                                <outputDir>${basedir}/src/main/java</outputDir>-->
+<!--                            </wsdlOption>-->
+<!--                        </wsdlOptions>-->
+<!--                        <sourceRoot>${basedir}/src/main/java</sourceRoot>-->
+<!--                    </configuration>-->
+<!--                    <goals>-->
+<!--                        <goal>wsdl2java</goal>-->
+<!--                    </goals>-->
+<!--                </execution>-->
+<!--            </executions>-->
+<!--        </plugin>-->
+
+		<plugin>
+		   <groupId>org.apache.maven.plugins</groupId>
+		   <artifactId>maven-install-plugin</artifactId>
+		   				   				   
+		   <executions>
+		      <execution>
+		         <id>install-jar-lib</id>
+		         <goals>
+		            <goal>install-file</goal>
+		         </goals>
+		         <phase>validate</phase>
+		      
+			      <configuration>
+			      <groupId>eu.domibus.connector</groupId>
+				  <artifactId>domibusConnectorAPI</artifactId>
+				  <version>4.4.8</version>
+			      <packaging>jar</packaging>
+			      <file>${basedir}/dependencies/domibusConnectorAPI-4.4.8.jar</file>
+			      <generatePom>true</generatePom>
+			      </configuration>
+		      </execution>
+		      <execution>
+		         <id>install-jar-lib2</id>
+		         <goals>
+		            <goal>install-file</goal>
+		         </goals>
+		         <phase>validate</phase>
+		      
+			       <configuration>
+				       <groupId>eu.ecodex.utils</groupId>
+					  <artifactId>spring-property-configuration-validator</artifactId>
+					  <version>0.0.22-RELEASE</version>
+				      <packaging>jar</packaging>
+				      <file>${basedir}/dependencies/spring-property-configuration-validator-0.0.22-RELEASE.jar</file>
+				      <generatePom>true</generatePom>      			
+				   </configuration>
+		      </execution>
+		   </executions>
+		</plugin>
+				
+    </plugins>
+  </build>
+
+
+</project>
